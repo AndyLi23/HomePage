@@ -1,0 +1,33 @@
+<!doctype html>
+<title>Home</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+{% block header %}
+<h1>Home</h1>
+{% endblock %}
+
+{% block content %}
+<h2>News</h2>
+
+{% for i in sites.keys() %}
+<h3>{{ i }}</h3>
+{% for j in news[i].keys() %}
+<a href="{{ news[i][j] }}" target="_blank">{{j}}</a></br>
+{% endfor %}
+{% endfor %}
+
+<h2>Jokes</h2>
+{% for i in jokes %}
+<p>{{ i[0] }}</p>
+{% endfor %}
+
+<h2>Stocks</h2>
+{% for i in stocks %}
+<p>{{ i }}</p>
+{% endfor %}
+
+<h2>Today in History</h2>
+{% for i in today %}
+<p>{{ i }}</p>
+{% endfor %}
+{% endblock %}
