@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 from queue import Queue
 from threading import Thread
 
-websites = {
+websites_ = {
     "BuzzFeed": ["https://www.buzzfeed.com/trending", ["featured-card__headline link-gray", "js-card__link link-gray"]],
     "CNN": ["https://www.cnn.com/specials/last-50-stories", ["cd__headline-text"]],
     "New York Times": ["https://www.nytimes.com/", ["css-1cmu9py esl82me0", "balancedHeadline"]],
@@ -24,7 +24,7 @@ websites = {
 }
 
 
-def get_top(site, n=10):
+def get_top(site, websites, n=10):
     top = {}
     s = requests.get(websites[site][0], headers={
                      "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36"})
@@ -99,14 +99,14 @@ def get_top(site, n=10):
     return ans
 
 
-def get_all_news():
+def get_all_news(websites=websites_):
     ans = {}
 
     cc = len(websites.keys())
 
     def one():
         i = q.get()
-        ans[i] = get_top(i, 5)
+        ans[i] = get_top(i, websites, 5)
         q.task_done()
 
     q = Queue(cc)

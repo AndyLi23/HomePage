@@ -11,12 +11,17 @@ for i in ans.keys():
     for k, v in ans[i].items():
         print(k)
 
+print("\n\n")
 
 stocks = get_all_stock()
 for i in stocks:
     print("\n" + i)
     print(stocks[i]['change'])
 
+print("\n\n")
+
 today = get_today()
 for i in today:
     print(i)
+
+print("\n")

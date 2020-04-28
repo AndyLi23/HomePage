@@ -3,7 +3,7 @@ import datetime
 from queue import Queue
 from threading import Thread
 
-stocks = ["AAPL", "MSFT", "GOOG", "TSLA", "AMZN"]
+stocks_ = ["AAPL", "MSFT", "GOOG", "TSLA", "AMZN"]
 
 
 def getStock(ticker, time):
@@ -16,7 +16,7 @@ def getStock(ticker, time):
     return ans
 
 
-def get_all_stock():
+def get_all_stock(stocks=stocks_):
     ans = {}
 
     cc = len(stocks)
