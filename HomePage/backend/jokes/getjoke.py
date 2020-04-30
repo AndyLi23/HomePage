@@ -4,7 +4,7 @@ from base64 import b64decode
 
 
 def get_joke():
-    with open('backend/jokes/ans.csv', "r") as fin:
+    with open('ans.csv', "r") as fin:
         reader = csv.reader(fin)
         ans = []
         # read csv for jokes
@@ -20,7 +20,7 @@ def get_joke():
                         p = True
                         break
                 if not p:
-                    if "." in "".join(row[1]) or "!" in "".join(row[1]) or "?" in "".join(row[1]):
+                    if "".join(row[1])[-1] == "." or "".join(row[1])[-1] == "!" or "".join(row[1])[-1] == "?" or "".join(row[1])[-1] == ",":
                         ans.append(" ".join(row[1:]).strip())
                     else:
                         ans.append(". ".join(row[1:]).strip())
@@ -29,7 +29,7 @@ def get_joke():
     return ans
 
 
-with open('backend/jokes/jokes.csv', "w+") as fout:
+with open('jokes.csv', "w+") as fout:
     writer = csv.writer(fout)
     for i in get_joke():
         writer.writerow([i])

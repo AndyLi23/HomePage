@@ -3,31 +3,181 @@
 
 <head>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <h1 class="title">Home</h1>
+    <h1 class="title">Hi, Andy!</h1>
 </head>
 
 <body>
-    <h2>News</h2>
+    <div class="container">
+        <div class="panel" id="news">
+            <h2>News</h2>
 
-    {% for i in sites.keys() %}
-    <h3>{{ i }}</h3>
-    {% for j in news[i].keys() %}
-    <a href="{{ news[i][j] }}" target="_blank">{{j}}</a></br>
-    {% endfor %}
-    {% endfor %}
+            {% for i in news %}
+            <a href="{{ i[1] }}" target="_blank">{{ i[0] }}</a></br>
+            {% endfor %}
+            <p id="spacing"></p>
+        </div>
 
-    <h2>Jokes</h2>
-    {% for i in jokes %}
-    <p>{{ i[0] }}</p>
-    {% endfor %}
+        <div class="panel" id="stocks">
+            <h2>Stocks</h2>
+            <div id="stocks-text">
+                {% for k,v in stocks.items() %}
+                {% if v["change"][-1] == "⬆" %}
+                <span onclick="newGraph(this)" id="{{ v["history"] }}" class="stock-button"
+                    style="font-family: Courier;">
+                    <p>{{ v['price'] }}<a style="background-color: #00ff00;">{{ v["change"] }}</a></p>
+                </span>
+                {% else %}
+                <span onclick="newGraph(this)" id="{{ v["history"] }}" class="stock-button"
+                    style="font-family: Courier;">
+                    <p>{{ v['price'] }}<a style="background-color: #ff0000;">{{ v["change"] }}</a></p>
+                </span>
+                {% endif %}
+                {% endfor %}
+                <div id="test"></div>
+                <script src="https://www.gstatic.com/charts/loader.js"></script>
+                <script>
+                    google.charts.load('current', { packages: ['corechart'] });
 
-    <h2>Stocks</h2>
-    {% for i in stocks %}
-    <p>{{ i }}</p>
-    {% endfor %}
+                    function drawChart(de, k) {
+                        // Define the chart to be drawn.
+                        let dsplit = de.split("|");
+                        let d = dsplit[1];
+                        let name = dsplit[0];
+                        console.log(d);
+                        console.log(name);
+                        let temp = d.slice(1, d.length - 1).split("), (");
+                        temp[0] = temp[0].slice(1, d.length);
+                        temp[temp.length - 1] = temp[temp.length - 1].slice(0, d.length - 1);
+                        let days = [];
+                        let prices = [];
+                        let i;
+                        for (i = 0; i < temp.length; i++) {
+                            let t = temp[i].split(", ");
+                            days.push(t[0].slice(1, t[0].length - 1));
+                            prices.push(parseFloat(t[1]));
+                        }
 
-    <h2>Today in History</h2>
-    {% for i in today %}
-    <p>{{ i }}</p>
-    {% endfor %}
+                        var data = new google.visualization.DataTable();
+                        data.addColumn('string', 'Day');
+                        data.addColumn('number', 'Value');
+                        let j;
+                        for (j = 0; j <= days.length - 1; j++) {
+                            data.addRows([
+                                [days[j], prices[j]]
+                            ]);
+                        }
+                        var options = {
+                            title: name + ' Stock Value',
+                            legend: { position: 'bottom' },
+                            vAxis: {
+                                title: 'Value (USD)',
+                            },
+                            hAxis: {
+                                title: 'Day',
+                            }
+                        };
+                        // Instantiate and draw the chart.
+                        var chart = new google.visualization.LineChart(document.getElementById('stocks-graph'));
+                        chart.draw(data, options);
+                    }
+
+                </script>
+                <script>
+                    function newGraph(i) {
+                        var graph = document.getElementById("stocks-graph");
+                        if (graph.hasChildNodes) {
+                            graph.removeChild(graph.firstChild);
+                        }
+                        google.charts.setOnLoadCallback(drawChart(i.id, i));
+                    }
+                </script>
+            </div>
+            <div id="stocks-graph">
+            </div>
+        </div>
+
+        <div class="panel" id="reminders">
+            <h2>Reminders</h2>
+            <div id="myDIV" class="header">
+                <input type="text" id="myInput" placeholder="Title...">
+                <span onclick="newElement()" class="addBtn">Add</span>
+            </div>
+
+            <ul id="myUL">
+            </ul>
+            <script>
+                // Create a "close" button and append it to each list item
+                var myNodelist = document.getElementsByTagName("LI");
+                var i;
+                for (i = 0; i < myNodelist.length; i++) {
+                    var span = document.createElement("SPAN");
+                    var txt = document.createTextNode("\u00D7");
+                    span.className = "close";
+                    span.appendChild(txt);
+                    myNodelist[i].appendChild(span);
+                }
+
+                // Click on a close button to hide the current list item
+                var close = document.getElementsByClassName("close");
+                var i;
+                for (i = 0; i < close.length; i++) {
+                    close[i].onclick = function () {
+                        var div = this.parentElement;
+                        div.style.display = "none";
+                    }
+                }
+
+                // Add a "checked" symbol when clicking on a list item
+                var list = document.querySelector('ul');
+                list.addEventListener('click', function (ev) {
+                    if (ev.target.tagName === 'LI') {
+                        ev.target.classList.toggle('checked');
+                    }
+                }, false);
+
+                // Create a new list item when clicking on the "Add" button
+                function newElement() {
+                    var li = document.createElement("li");
+                    var inputValue = document.getElementById("myInput").value;
+                    var t = document.createTextNode(inputValue);
+                    li.appendChild(t);
+                    if (inputValue === '') {
+                        pass;
+                    } else {
+                        document.getElementById("myUL").appendChild(li);
+                    }
+                    document.getElementById("myInput").value = "";
+
+                    var span = document.createElement("SPAN");
+                    var txt = document.createTextNode("\u00D7");
+                    span.className = "close";
+                    span.appendChild(txt);
+                    li.appendChild(span);
+
+                    for (i = 0; i < close.length; i++) {
+                        close[i].onclick = function () {
+                            var div = this.parentElement;
+                            div.style.display = "none";
+                        }
+                    }
+                } 
+            </script>
+        </div>
+
+        <div class="panel" id="history">
+            <h2>Today in History</h2>
+            <p>
+                {% for i in today %}
+                {{ i }}</br>
+                {% endfor %}
+            </p>
+        </div>
+
+        <div class="panel" id="jokes">
+            <h2>Jokes</h2>
+            {% for i in jokes %}
+            <p>{{ i[0] }}</p>
+            {% endfor %}
+        </div>
+    </div>
 </body>

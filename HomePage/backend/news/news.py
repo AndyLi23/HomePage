@@ -105,7 +105,7 @@ def get_top(site, websites, n=10):
     return ans
 
 
-def get_all_news(websites=websites_):
+def get_all_news(websites=websites_, n=5):
     ans = {}
     # how many threads
     cc = len(websites.keys())
@@ -114,7 +114,7 @@ def get_all_news(websites=websites_):
     def one():
         i = q.get()
         try:
-            ans[i] = get_top(i, websites, 5)
+            ans[i] = get_top(i, websites, n)
         except:
             pass
         q.task_done()
