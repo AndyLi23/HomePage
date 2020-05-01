@@ -34,8 +34,6 @@ def index():
             all_news.extend(temp)
     s = get_all_stock()
     for k, v in s.items():
-        if len(k + " " + v['price'])-12 == 1:
-            v['price'] = k + " " + v['price'] + ".."
-        else:
-            v['price'] = k + " " + v['price'] + "..."
+        v['price'] = k + " " + v['price'] + \
+            "." * (15-len(k + " " + v['price']))
     return render_template('index.html', news=all_news, jokes=get_jokes(), today=get_today(), stocks=s)

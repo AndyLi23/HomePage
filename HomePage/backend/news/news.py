@@ -102,6 +102,7 @@ def get_top(site, websites, n=10):
         if i < len(k):
             ans[k[i].strip()] = top[k[i]]
     # return results
+    print(site)
     return ans
 
 

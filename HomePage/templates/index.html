@@ -18,7 +18,7 @@
         </div>
 
         <div class="panel" id="stocks">
-            <h2>Stocks</h2>
+            <h2 id="stock-title">Stocks</h2>
             <div id="stocks-text">
                 {% for k,v in stocks.items() %}
                 {% if v["change"][-1] == "⬆" %}
@@ -33,7 +33,6 @@
                 </span>
                 {% endif %}
                 {% endfor %}
-                <div id="test"></div>
                 <script src="https://www.gstatic.com/charts/loader.js"></script>
                 <script>
                     google.charts.load('current', { packages: ['corechart'] });
@@ -42,9 +41,7 @@
                         // Define the chart to be drawn.
                         let dsplit = de.split("|");
                         let d = dsplit[1];
-                        let name = dsplit[0];
-                        console.log(d);
-                        console.log(name);
+                        let inf = dsplit[0];
                         let temp = d.slice(1, d.length - 1).split("), (");
                         temp[0] = temp[0].slice(1, d.length);
                         temp[temp.length - 1] = temp[temp.length - 1].slice(0, d.length - 1);
@@ -67,14 +64,18 @@
                             ]);
                         }
                         var options = {
-                            title: name + ' Stock Value',
                             legend: { position: 'bottom' },
                             vAxis: {
                                 title: 'Value (USD)',
                             },
                             hAxis: {
                                 title: 'Day',
-                            }
+                            },
+                            backgroundColor: '#e5e5e5',
+                            fontSize: 12,
+                            fontName: "Roboto",
+                            width: 216,
+                            height: 180
                         };
                         // Instantiate and draw the chart.
                         var chart = new google.visualization.LineChart(document.getElementById('stocks-graph'));
@@ -85,12 +86,29 @@
                 <script>
                     function newGraph(i) {
                         var graph = document.getElementById("stocks-graph");
+                        var graphtext = document.getElementById("stocks-graph-text");
+                        let is = i.id.split("|")[0].split("!");
                         if (graph.hasChildNodes) {
                             graph.removeChild(graph.firstChild);
                         }
+                        if (graphtext.firstElementChild != null) {
+                            graphtext.removeChild(graphtext.firstElementChild);
+                        }
+                        let u;
+                        let sp = document.createElement("span");
+                        sp.id = "stock-span";
+                        for (u = 0; u < is.length; u++) {
+                            var p = document.createElement("p");
+                            p.textContent = is[u];
+                            p.className = "stock-desc";
+                            sp.appendChild(p);
+                        }
+                        graphtext.appendChild(sp);
                         google.charts.setOnLoadCallback(drawChart(i.id, i));
                     }
                 </script>
+            </div>
+            <div id="stocks-graph-text">
             </div>
             <div id="stocks-graph">
             </div>

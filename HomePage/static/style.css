@@ -1,12 +1,29 @@
 html {
     font-family: Roboto, Verdana, Geneva, Tahoma, sans-serif;
-    background: #f063ba;
+    animation: pulse 5s infinite;
 }
+
+@keyframes pulse {
+  0% {
+    background: #f063ba;
+  }
+  50% {
+    background: #ff33b1;
+  }
+  100% {
+    background: #f063ba;
+  }
+}
+
 
 h1 {
     text-align: center;
     font-size: 4rem;
     margin: 0rem 0rem -2.5rem 0rem;
+    border-radius: 30rem;
+    width: 30rem;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .container {
@@ -28,10 +45,23 @@ h1 {
 }
 
 .panel {
-    background: #fcc8c2;
-    border: 5px solid #ff87ab;
-    border-radius: 10px
+    border: 10px solid #ff87ab;
+    border-radius: 10px;
+    animation: panelPulse 5s infinite;
 }
+
+@keyframes panelPulse {
+  0% {
+    background: #fcc8c2;
+  }
+  50% {
+    background: #ffbfb7;
+  }
+  100% {
+    background: #fcc8c2;
+  }
+}
+
 
 #reminders {
     order: 3;
@@ -196,18 +226,50 @@ input {
 }
 
 .stock-button:hover {
-    color: #ffffff !important;
+    color: #ffffff;
     cursor: pointer;
 }
 
 #stocks-text {
     float: left;
-    max-width: 15rem !important;
+    width: auto;
     margin: 0;
 }
 #stocks-graph {
     float: right;
-    width: 15rem !important;
-    margin: 0;
-    padding: 1rem;
+    width: auto;
+    margin-right: 1rem;
+    margin-left: 0rem;
+    display: block;
+    margin-top: 20px;
+}
+
+#stock-title {
+    width: 15rem;
+}
+
+.stock-desc {
+    margin-left: 10px;
+    max-width: 8.5rem;
+    font-family: Roboto, Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 14px;
+}
+
+#stock-span {
+    max-width: 8.5rem;
+    width: 8.5rem;
+    padding: 0rem;
+    margin: 0rem;
+    display:block;
+    width: auto;
+    margin-top: 20px;
+    margin-left: 15px;
+}
+
+#stocks-graph-text {
+    margin-top: 22px;
+    float: left;
+    position: relative;
+    width: auto;
+    display:block;
 }

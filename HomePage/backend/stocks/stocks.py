@@ -3,26 +3,34 @@ import datetime
 from queue import Queue
 from threading import Thread
 
-stocks_ = ["DJI", "AAPL", "MSFT", "GOOG", "TSLA", "AMZN"]
+stocks_ = ["^DJI", "AAPL", "MSFT", "GOOG", "TSLA", "AMZN"]
 
 
 def getStock(ticker, time):
     # get current prices
-    t = yf.Ticker(ticker).history(time)
+    c = yf.Ticker(ticker)
+    t = c.history(time)
     ans = {}
     # return based on change
     a = t.to_dict()["Open"].keys()
     days = [str(i.to_pydatetime()).split(" ")[0] for i in a]
+    try:
+        c = c.info
+        inf = ticker + ": " + c["longName"] + "!Sector: " + \
+            c['sector'] + "!Market Cap: $" + str(c['marketCap'])
+    except:
+        inf = ticker[1:] + " Index"
     if t["Close"][-1] > t["Close"][-2]:
         ans["price"] = "{: .2f}".format(t["Close"][-1])
         ans["change"] = "+{:.2f}%  ⬆".format(t["Close"]
                                              [-1] / t["Close"][-2])
-        ans["history"] = ticker + "|" + str(list(zip(days, t["Close"][-5:])))
+        ans["history"] = inf + "|" + str(list(zip(days, t["Close"][-5:])))
     else:
         ans["price"] = "{: .2f}".format(t["Close"][-1])
         ans["change"] = "-{:.2f}%  ⬇".format(t["Close"]
                                              [-1] / t["Close"][-2])
-        ans["history"] = ticker + "|" + str(list(zip(days, t["Close"][-5:])))
+        ans["history"] = inf + "|" + str(list(zip(days, t["Close"][-5:])))
+    print(ticker)
     return ans
 
 
@@ -51,6 +59,3 @@ def get_all_stock(stocks=stocks_):
         ans[i] = temp[i]
 
     return ans
-
-
-print(get_all_stock())
