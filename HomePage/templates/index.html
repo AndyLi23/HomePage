@@ -12,7 +12,7 @@
             <h2>News</h2>
 
             {% for i in news %}
-            <a href="{{ i[1] }}" target="_blank">{{ i[0] }}</a></br>
+            <a href="{{ i[1] }}" target="_blank" class="news-a">{{ i[0] }}</a></br>
             {% endfor %}
             <p id="spacing"></p>
         </div>
@@ -22,12 +22,12 @@
             <div id="stocks-text">
                 {% for k,v in stocks.items() %}
                 {% if v["change"][-1] == "⬆" %}
-                <span onclick="newGraph(this)" id="{{ v["history"] }}" class="stock-button"
+                <span onclick="newGraph(this, 5)" id="{{ v["history"] }}" class="stock-button"
                     style="font-family: Courier;">
                     <p>{{ v['price'] }}<a style="background-color: #00ff00;">{{ v["change"] }}</a></p>
                 </span>
                 {% else %}
-                <span onclick="newGraph(this)" id="{{ v["history"] }}" class="stock-button"
+                <span onclick="newGraph(this, 5)" id="{{ v["history"] }}" class="stock-button"
                     style="font-family: Courier;">
                     <p>{{ v['price'] }}<a style="background-color: #ff0000;">{{ v["change"] }}</a></p>
                 </span>
@@ -48,7 +48,8 @@
                         let days = [];
                         let prices = [];
                         let i;
-                        for (i = 0; i < temp.length; i++) {
+                        console.log(k);
+                        for (i = temp.length - k; i < temp.length; i++) {
                             let t = temp[i].split(", ");
                             days.push(t[0].slice(1, t[0].length - 1));
                             prices.push(parseFloat(t[1]));
@@ -71,7 +72,7 @@
                             hAxis: {
                                 title: 'Day',
                             },
-                            backgroundColor: '#e5e5e5',
+                            backgroundColor: '#ffbfb7',
                             fontSize: 12,
                             fontName: "Roboto",
                             width: 216,
@@ -84,16 +85,43 @@
 
                 </script>
                 <script>
-                    function newGraph(i) {
+                    function newGraph(i, k) {
+                        var t = parseInt(k);
                         var graph = document.getElementById("stocks-graph");
                         var graphtext = document.getElementById("stocks-graph-text");
+                        var buttons = document.getElementById("stocks-change-buttons");
+
                         let is = i.id.split("|")[0].split("!");
-                        if (graph.hasChildNodes) {
-                            graph.removeChild(graph.firstChild);
+
+                        if (graph.firstElementChild != null) {
+                            graph.removeChild(graph.firstElementChild);
                         }
                         if (graphtext.firstElementChild != null) {
                             graphtext.removeChild(graphtext.firstElementChild);
                         }
+                        if (buttons.firstElementChild != null) {
+                            buttons.removeChild(buttons.firstElementChild);
+                        }
+
+                        let spb = document.createElement("span");
+                        let days = ["5", "15", "30", "60", "180", "360"];
+                        let q;
+                        for (q = 0; q < days.length; q++) {
+                            var z = document.createElement("span");
+                            var tx = document.createTextNode(days[q] + "d");
+                            z.appendChild(tx)
+                            z.className = "stock-switch";
+                            z.onclick = function () {
+                                var graph = document.getElementById("stocks-graph");
+                                if (graph.firstElementChild != null) {
+                                    graph.removeChild(graph.firstElementChild);
+                                }
+                                google.charts.setOnLoadCallback(drawChart(i.id, parseInt(this.firstChild.textContent)));
+                            };
+                            spb.appendChild(z);
+                        }
+                        buttons.appendChild(spb);
+
                         let u;
                         let sp = document.createElement("span");
                         sp.id = "stock-span";
@@ -103,11 +131,17 @@
                             p.className = "stock-desc";
                             sp.appendChild(p);
                         }
+
                         graphtext.appendChild(sp);
-                        google.charts.setOnLoadCallback(drawChart(i.id, i));
+                        google.charts.setOnLoadCallback(drawChart(i.id, t));
+                    }
+
+                    function changeGraph(i, k) {
+                        newGraph(i, k);
                     }
                 </script>
             </div>
+            <div id="stocks-change-buttons"></div>
             <div id="stocks-graph-text">
             </div>
             <div id="stocks-graph">
@@ -189,6 +223,13 @@
                 {{ i }}</br>
                 {% endfor %}
             </p>
+            <a href="https://www.historynet.com/today-in-history/" target="_blank"
+                class="news-a">https://www.historynet.com/today-in-history/</a>
+            <p id="spacing"></p>
+        </div>
+
+        <div class="panel" id="links">
+            <h2>Links</h2>
         </div>
 
         <div class="panel" id="jokes">
@@ -196,6 +237,14 @@
             {% for i in jokes %}
             <p>{{ i[0] }}</p>
             {% endfor %}
+            <a href="upjoke.com/" target="_blank" class="news-a">upjoke.com/</a>
+            <p id="spacing"></p>
+        </div>
+
+        <div class="panel" id="music">
+            <h2>Music</h2>
+            <iframe src="https://open.spotify.com/embed/playlist/6QRgglwxqLzWkx08B1Lrlw" width="300" height="380"
+                frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
         </div>
     </div>
 </body>

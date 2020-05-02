@@ -47,7 +47,7 @@ h1 {
 .panel {
     border: 10px solid #ff87ab;
     border-radius: 10px;
-    animation: panelPulse 5s infinite;
+    background: #ffbfb7;
 }
 
 @keyframes panelPulse {
@@ -99,6 +99,16 @@ h1 {
 }
 
 #jokes {
+    order: 4;
+    padding: 0rem 0rem 0rem 1.5rem;
+    margin: 1rem;
+    overflow-y: auto;
+    height: 15rem;
+    flex-grow: 1;
+    width: 30rem;
+}
+
+#links {
     order: 3;
     padding: 0rem 0rem 0rem 1.5rem;
     margin: 1rem;
@@ -108,6 +118,19 @@ h1 {
     width: 30rem;
 }
 
+#music {
+    order: 4;
+    padding: 0rem 0rem 0rem 1.5rem;
+    margin: 1rem;
+    overflow-y: auto;
+    height: 15rem;
+    flex-grow: 1;
+    width: 30rem;
+}
+
+#stock-title {
+  margin-bottom: -0.25rem;
+}
 
 #spacing {
     font-size: 2rem;
@@ -200,6 +223,7 @@ input {
   padding: 10px;
   float: left;
   font-size: 16px;
+  height: 40px;
 }
 
 /* Style the "Add" button */
@@ -214,6 +238,7 @@ input {
   cursor: pointer;
   transition: 0.3s;
   border-radius: 0;
+  height: 40px;
 }
 
 .addBtn:hover {
@@ -236,12 +261,12 @@ input {
     margin: 0;
 }
 #stocks-graph {
-    float: right;
+    float: left;
     width: auto;
-    margin-right: 1rem;
-    margin-left: 0rem;
+    margin-left: 2rem;
+    margin-right: 0rem;
     display: block;
-    margin-top: 20px;
+    margin-top: 15%;
 }
 
 #stock-title {
@@ -249,7 +274,7 @@ input {
 }
 
 .stock-desc {
-    margin-left: 10px;
+    margin-right: 10px;
     max-width: 8.5rem;
     font-family: Roboto, Verdana, Geneva, Tahoma, sans-serif;
     font-size: 14px;
@@ -262,14 +287,54 @@ input {
     margin: 0rem;
     display:block;
     width: auto;
-    margin-top: 20px;
-    margin-left: 15px;
+    margin-top: 13%;
+    margin-right: 15px;
+    float: right;
 }
 
 #stocks-graph-text {
-    margin-top: 22px;
-    float: left;
+    margin-top: 0px;
     position: relative;
     width: auto;
     display:block;
+}
+
+#stocks-change-buttons {
+  margin-left: 1.5rem;
+  margin-top: 5rem;
+  margin-bottom: -100px;
+  position: relative;
+  float: left;
+  max-width: 10rem;
+  width: auto;
+  font-size: 11px;
+}
+
+.stock-switch {
+  padding: 0rem 0.5rem 0rem 0.5rem;
+}
+
+.stock-switch:hover{
+  color: white;
+  cursor: pointer;
+}
+
+#myDIV {
+  margin: 0px;
+}
+
+a:link {
+  text-decoration: none;
+}
+
+a:visited {
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+a:active {
+  text-decoration: underline;
 }
