@@ -3,8 +3,8 @@ from queue import Queue
 from threading import Thread
 from humanize import intword
 
-stocks_ = ["AAPL", "MSFT", "GOOG", "TSLA",
-           "AMZN"]
+stocks_ = ["^DJI", "AAPL", "MSFT", "GOOG",
+           "TSLA", "NOC", "LMT", "SNPS", "AMZN"]
 
 
 def getStock(ticker, time):
@@ -25,13 +25,15 @@ def getStock(ticker, time):
         inf = ticker[1:] + " Index"
     if t["Close"][-1] > t["Close"][-2]:
         ans["price"] = "{: .2f}".format(t["Close"][-1])
-        ans["change"] = "+{:.2f}%  ⬆".format(t["Close"]
-                                             [-1] / t["Close"][-2])
+        ans["change"] = "+{:.2f}%".format((1-(t["Close"]
+                                              [-2] / t["Close"][-1]))*100)
+        ans["change"] += " " * (7-len(ans["change"])) + "⬆"
         ans["history"] = inf + "|" + str(list(zip(days, t["Close"])))
     else:
         ans["price"] = "{: .2f}".format(t["Close"][-1])
-        ans["change"] = "-{:.2f}%  ⬇".format(t["Close"]
-                                             [-1] / t["Close"][-2])
+        ans["change"] = "-{:.2f}%".format(((t["Close"]
+                                            [-2] / t["Close"][-1])-1)*100)
+        ans["change"] += " " * (7-len(ans["change"])) + "⬇"
         ans["history"] = inf + "|" + str(list(zip(days, t["Close"])))
     print(ticker)
     return ans
@@ -48,7 +50,7 @@ def get_all_stock(stocks=stocks_):
         q.task_done()
     # queue of sites
     q = Queue(cc)
-    for i in range(cc*2):
+    for i in range(cc):
         t = Thread(target=one)
         t.daemon = True
         t.start()

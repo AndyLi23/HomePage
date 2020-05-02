@@ -39,20 +39,25 @@ def getWebsites():
 
 
 def getStock():
-    s = get_all_stock()
-    for k, v in s.items():
+    st = get_all_stock()
+    for k, v in st.items():
         v['price'] = k + " " + v['price'] + \
             "." * (15-len(k + " " + v['price']))
-    return s
+    return st
+
+
+def getJokes():
+    return get_jokes()
 
 
 @bp.route('/')
 def index():
-    pool = Pool(processes=2)
+    pool = Pool(processes=3)
 
+    st = pool.apply_async(getStock)
     all_news = pool.apply_async(getWebsites)
-    s = pool.apply_async(getStock)
+    jokes = pool.apply_async(getJokes)
     pool.close()
     pool.join()
 
-    return render_template('index.html', news=all_news.get(), jokes=get_jokes(), today=get_today(), stocks=s.get())
+    return render_template('index.html', news=all_news.get(), jokes=jokes.get(), today=get_today(), stocks=st.get())
