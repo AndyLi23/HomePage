@@ -1,36 +1,18 @@
-import requests
+from requests import get
 from bs4 import BeautifulSoup
 from queue import Queue
 from threading import Thread
 
 #websites and URLs
-websites_ = {
-    "BuzzFeed": ["https://www.buzzfeed.com/trending", ["featured-card__headline link-gray", "js-card__link link-gray"]],
-    "CNN": ["https://www.cnn.com/specials/last-50-stories", ["cd__headline-text"]],
-    "New York Times": ["https://www.nytimes.com/", ["css-1cmu9py esl82me0", "balancedHeadline"]],
-    "Huffington Post": ["https://www.huffpost.com/news/topic/trending-topics", ["card__headline card__headline--long"]],
-    "NBC News": ["https://www.nbcnews.com/latest-stories", ["headline___38PFH"]],
-    "Washington Post": ["https://www.washingtonpost.com/", []],
-    "Wall Street Journal": ["https://www.wsj.com/", []],
-    "The Atlantic": ["https://www.theatlantic.com/most-popular/", ["hed"]],
-    "ABC News": ["https://abcnews.go.com/", []],
-    "The Onion": ["https://www.theonion.com/", ["sc-1qoge05-0 eoIfRA"]],
-    "Fox News": ["https://www.foxnews.com/", ["title title-color-default"]],
-    "BBC News": ["https://www.bbc.com/news", ["gs-c-promo-heading__title gel-paragon-bold nw-o-link-split__text", "gs-c-promo-heading__title gel-pica-bold nw-o-link-split__text"]],
-    "POLITICO": ["https://www.politico.com/", ["js-tealium-tracking"]],
-    "NPR News": ["https://www.npr.org/", ["title"]],
-    "Reuters": ["https://www.reuters.com/", ["story-title"]],
-    "Associated Press": ["https://apnews.com/", []],
-    "CBS News": ["https://www.cbsnews.com/", ["item__hed"]]
-}
-
 
 # Get top from one site
+
+
 def get_top(site, websites, n=10):
     top = {}
     # Get request
-    s = requests.get(websites[site][0], headers={
-                     "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36"})
+    s = get(websites[site][0], headers={
+        "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36"})
     soup = BeautifulSoup(s.content, features="html.parser")
     # parse soup based on site
     if site == "BuzzFeed" or site == "Huffington Post":
@@ -106,7 +88,20 @@ def get_top(site, websites, n=10):
     return ans
 
 
-def get_all_news(websites=websites_, n=5):
+def getTop100():
+    bs = BeautifulSoup(get("https://www.billboard.com/charts/hot-100").content,
+                       features="html.parser")
+    print("gottem")
+    ans = []
+    cur = "1"
+    for i in bs.find_all(attrs={"class": "chart-element__information"}):
+        tx = [h for h in i.get_text().strip().split("\n") if h]
+        ans.append(cur + " - " + tx[0] + " - " + tx[1])
+        cur = str(int(cur)+1)
+    return ans
+
+
+def get_all_news(websites, n=5):
     ans = {}
     # how many threads
     cc = len(websites.keys())
@@ -114,10 +109,15 @@ def get_all_news(websites=websites_, n=5):
 
     def one():
         i = q.get()
-        try:
-            ans[i] = get_top(i, websites, n)
-        except:
-            pass
+        if i == "Billboard":
+            print("starting music")
+            ans[i] = getTop100()
+            print("done music")
+        else:
+            try:
+                ans[i] = get_top(i, websites, n)
+            except:
+                pass
         q.task_done()
     # queue of sites
     q = Queue(cc)

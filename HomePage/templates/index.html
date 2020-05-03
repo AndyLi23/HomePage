@@ -24,12 +24,12 @@
                 {% if v["change"][-1] == "⬆" %}
                 <span onclick="newGraph(this, 5)" id="{{ v["history"] }}" class="stock-button"
                     style="font-family: Courier;">
-                    <p>{{ v['price'] }}<a style="background-color: #00ff00;">{{ v["change"] }}</a></p>
+                    <p>{{ v['price'] }}<a style="background-color: #00dd00b2;">{{ v["change"] }}</a></p>
                 </span>
                 {% else %}
                 <span onclick="newGraph(this, 5)" id="{{ v["history"] }}" class="stock-button"
                     style="font-family: Courier;">
-                    <p>{{ v['price'] }}<a style="background-color: #ff0000;">{{ v["change"] }}</a></p>
+                    <p>{{ v['price'] }}<a style="background-color: #ff0000b2;">{{ v["change"] }}</a></p>
                 </span>
                 {% endif %}
                 {% endfor %}
@@ -64,22 +64,41 @@
                                 [days[j], prices[j]]
                             ]);
                         }
-                        var options = {
-                            legend: { position: 'bottom' },
-                            vAxis: {
-                                title: 'Value (USD)',
-                            },
-                            hAxis: {
-                                title: 'Day',
-                            },
-                            backgroundColor: '#ffbfb7',
-                            fontSize: 12,
-                            fontName: "Roboto",
-                            width: 216,
-                            height: 180
-                        };
+                        if (prices[0] < prices[prices.length - 1]) {
+                            var options = {
+                                legend: { position: 'bottom' },
+                                vAxis: {
+                                    title: 'Value (USD)',
+                                },
+                                hAxis: {
+                                    title: 'Day',
+                                },
+                                backgroundColor: '#ffbfb7',
+                                fontSize: 12,
+                                fontName: "Roboto",
+                                width: 216,
+                                height: 180,
+                                colors: ["#00ac00"],
+                            };
+                        } else {
+                            var options = {
+                                legend: { position: 'bottom' },
+                                vAxis: {
+                                    title: 'Value (USD)',
+                                },
+                                hAxis: {
+                                    title: 'Day',
+                                },
+                                backgroundColor: '#ffbfb7',
+                                fontSize: 12,
+                                fontName: "Roboto",
+                                width: 216,
+                                height: 180,
+                                colors: ["#eb0000"],
+                            };
+                        }
                         // Instantiate and draw the chart.
-                        var chart = new google.visualization.LineChart(document.getElementById('stocks-graph'));
+                        var chart = new google.visualization.AreaChart(document.getElementById('stocks-graph'));
                         chart.draw(data, options);
                     }
 
@@ -157,6 +176,7 @@
 
             <ul id="myUL">
             </ul>
+            <p id="spacing"></p>
             <script>
                 // Create a "close" button and append it to each list item
                 var myNodelist = document.getElementsByTagName("LI");
@@ -224,12 +244,39 @@
                 {% endfor %}
             </p>
             <a href="https://www.historynet.com/today-in-history/" target="_blank"
-                class="news-a">https://www.historynet.com/today-in-history/</a>
+                class="news-a">www.historynet.com/today-in-history</a>
             <p id="spacing"></p>
         </div>
 
         <div class="panel" id="links">
-            <h2>Links</h2>
+            <h2 id="link-h2">Links</h2>
+            <div id="link-container">
+                <div class="link-div" id="link-school">
+                    <h3>School</h3>
+                    <hr>
+                    <a href="https://mail.google.com/mail/u/0/#inbox" target="_blank" class="link-a">Gmail</a></br>
+                    <a href="https://drive.google.com/drive/u/0/" target="_blank" class="link-a">Google Drive</a></br>
+                    <a href="https://my.mitty.com/my/" target="_blank" class="link-a">MyMitty</a></br>
+                    <a href="https://mitty.myschoolapp.com/app/student#studentmyday/progress" target="_blank"
+                        class="link-a">Mitty Grades</a></br>
+                    <a href="https://portal.mitty.com/" target="_blank" class="link-a">Student Portal</a></br>
+                </div>
+                <div class="link-div" id="link-coding">
+                    <h3>Coding</h3>
+                    <hr>
+                    <a href="https://leetcode.com/problemset/all/" target="_blank" class="link-a">LeetCode</a></br>
+                    <a href="https://github.com/AndyLi23" target="_blank" class="link-a">Github</a></br>
+                </div>
+                <div class="link-div" id="link-reading">
+                    <h3>Reading</h3>
+                    <hr>
+                    <a href="https://en.wikipedia.org/wiki/Main_Page" target="_blank" class="link-a">Wikipedia</a></br>
+                    <a href="https://xkcd.com/" target="_blank" class="link-a">XKCD</a></br>
+                    <a href="https://www.dreamincode.net/forums/topic/78802-martyr2s-mega-project-ideas-list/"
+                        target="_blank" class="link-a">Project Ideas</a></br>
+                    <a href="https://stackoverflow.com/" target="_blank" class="link-a">Stack Overflow</a></br>
+                </div>
+            </div>
         </div>
 
         <div class="panel" id="jokes">
@@ -237,12 +284,18 @@
             {% for i in jokes %}
             <p>{{ i[0] }}</p>
             {% endfor %}
-            <a href="upjoke.com/" target="_blank" class="news-a">upjoke.com/</a>
+            <a href="https://upjoke.com/" target="_blank" class="news-a">upjoke.com</a>
             <p id="spacing"></p>
         </div>
 
         <div class="panel" id="music">
-            <h2>Music</h2>
+            <h2>Billboard Hot 100</h2>
+            {% for i in music %}
+            <p>{{ i }}</p>
+            {% endfor %}
+            <a href="https://www.billboard.com/charts/hot-100" target="_blank"
+                class="news-a">www.billboard.com/charts/hot-100</a>
+            <p id="spacing"></p>
         </div>
     </div>
 </body>

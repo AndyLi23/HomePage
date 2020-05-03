@@ -1,24 +1,27 @@
 from flask import Blueprint, render_template
 from HomePage.backend.jokes.get_filter_jokes import get_jokes
-from HomePage.backend.news.news import get_all_news, websites_
+from HomePage.backend.news.news import get_all_news
 from HomePage.backend.stocks.stocks import get_all_stock
 from HomePage.backend.today.today import get_today
 from random import randint, shuffle
-from multiprocessing import Pool
+from os import fork
+
 
 bp = Blueprint('home', __name__)
 
 websites = {
+    "Billboard": ["https://www.billboard.com/charts/hot-100"],
     "CNN": ["https://www.cnn.com/specials/last-50-stories", ["cd__headline-text"]],
-    "New York Times": ["https://www.nytimes.com/", ["css-1cmu9py esl82me0", "balancedHeadline"]],
     "Washington Post": ["https://www.washingtonpost.com/", []],
     "Wall Street Journal": ["https://www.wsj.com/", []],
-    "The Atlantic": ["https://www.theatlantic.com/most-popular/", ["hed"]],
+    "The Atlantic": ["https://www.theatlantic.com/most-popular/", ["hed"]]
 }
 
 
 def getWebsites():
     news = get_all_news(websites, 15)
+    music = news["Billboard"]
+    del news["Billboard"]
     all_news = []
     for i in websites.keys():
         if i in news.keys():
@@ -35,7 +38,7 @@ def getWebsites():
                         pass
             all_news.extend(list(temp))
     shuffle(all_news)
-    return all_news
+    return (all_news, music)
 
 
 def getStock():
@@ -52,12 +55,17 @@ def getJokes():
 
 @bp.route('/')
 def index():
-    pool = Pool(processes=3)
-
-    st = pool.apply_async(getStock)
-    all_news = pool.apply_async(getWebsites)
-    jokes = pool.apply_async(getJokes)
-    pool.close()
-    pool.join()
-
-    return render_template('index.html', news=all_news.get(), jokes=jokes.get(), today=get_today(), stocks=st.get())
+    x = fork()
+    global st
+    global all_news
+    global music
+    if x:
+        st = getStock()
+    else:
+        all_news, music = getWebsites()
+    jokes = getJokes()
+    try:
+        return render_template('index.html', news=all_news, jokes=jokes, today=get_today(), stocks=st, music=music)
+    except:
+        all_news, music = getWebsites()
+        return render_template('index.html', news=all_news, jokes=jokes, today=get_today(), stocks=getStock(), music=music)

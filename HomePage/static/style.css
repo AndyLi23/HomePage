@@ -1,5 +1,5 @@
 html {
-    font-family: Roboto, Verdana, Geneva, Tahoma, sans-serif;
+    font-family: Abel, Roboto, Verdana, Geneva, Tahoma, sans-serif;
     animation: pulse 5s infinite;
 }
 
@@ -110,7 +110,7 @@ h1 {
 
 #links {
     order: 3;
-    padding: 0rem 0rem 0rem 1.5rem;
+    padding: 0rem;
     margin: 1rem;
     overflow-y: auto;
     height: 15rem;
@@ -337,4 +337,57 @@ a:hover {
 
 a:active {
   text-decoration: underline;
+}
+
+.link-div {
+  background: #eee;
+  border-radius: 10px;
+  max-width: 12rem;
+  min-width: 11rem;
+  width: auto;
+  height: auto;
+  padding: 10px;
+}
+
+#link-container {
+  display: flex;
+  flex-wrap: wrap;
+  width: auto;
+  justify-content: space-around;
+  text-align: center;
+}
+
+#link-school {
+  order: 1;
+  margin-left: auto;
+}
+
+#link-coding {
+  order: 1;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+#link-reading {
+  order: 1;
+  margin-right: auto;
+}
+
+h3 {
+  margin: 0rem;
+  font-weight: normal;
+  margin-bottom: 0.5rem;
+}
+
+#link-h2 {
+  margin-left: 1.5rem;
+}
+
+.link-a {
+  font-size: 14px;
+}
+
+hr {
+  color: rgb(172, 172, 172);
+  width: 3rem;
 }

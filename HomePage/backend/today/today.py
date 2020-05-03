@@ -1,15 +1,13 @@
-import yfinance as yf
-import datetime
+from datetime import datetime
 from queue import Queue
 from threading import Thread
-import datetime
-import requests
+from requests import get
 from bs4 import BeautifulSoup as BS
 
 # Map to months
 map_ = {"01": "January", "02": "February", "03": "March",
         "04": "April", "05": "May", "06": "June", "07": "July", "08": "August", "09": "September", "10": "October", "11": "November", "12": "December"}
-today_ = str(datetime.datetime.today()).split(" ")[0].split("-")
+today_ = str(datetime.today()).split(" ")[0].split("-")
 
 # URL
 URL = "https://www.historynet.com/today-in-history/" + \
@@ -24,7 +22,7 @@ headers = {
 def get_today():
     ans = []
     # get website
-    p = requests.get(URL, headers=headers)
+    p = get(URL, headers=headers)
     # parse for dates
     soup = BS(p.content, "html.parser")
     for i in soup.find_all(attrs={"class": "war-event"}):
