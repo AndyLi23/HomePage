@@ -2,10 +2,22 @@ from requests import get
 from bs4 import BeautifulSoup
 from queue import Queue
 from threading import Thread
+from datetime import datetime
 
 #websites and URLs
 
 # Get top from one site
+map_ = {"01": "January", "02": "February", "03": "March",
+        "04": "April", "05": "May", "06": "June", "07": "July", "08": "August", "09": "September", "10": "October", "11": "November", "12": "December"}
+today_ = str(datetime.today()).split(" ")[0].split("-")
+
+# URL
+URL = "https://www.historynet.com/today-in-history/" + \
+    map_[today_[1]] + "-" + today_[2]
+
+headers = {
+    "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.113 Safari/537.36"
+}
 
 
 def get_top(site, websites, n=10):
@@ -101,6 +113,18 @@ def getTop100():
     return ans
 
 
+def get_today():
+    ans = []
+    # get website
+    p = get(URL, headers=headers)
+    # parse for dates
+    soup = BeautifulSoup(p.content, "html.parser")
+    for i in soup.find_all(attrs={"class": "war-event"}):
+        s = i.get_text().strip().split("\n\n")
+        ans.append(s[0].strip() + ": " + s[1].strip())
+    return ans
+
+
 def get_all_news(websites, n=5):
     ans = {}
     # how many threads
@@ -113,6 +137,10 @@ def get_all_news(websites, n=5):
             print("starting music")
             ans[i] = getTop100()
             print("done music")
+        elif i == "Today":
+            print("starting today")
+            ans[i] = get_today()
+            print("done today")
         else:
             try:
                 ans[i] = get_top(i, websites, n)

@@ -9,7 +9,6 @@ stocks_ = ["^DJI", "AAPL", "MSFT", "GOOG",
 
 def getStock(ticker, time):
     # get current prices
-    print(ticker)
     c = Ticker(ticker)
     t = c.history(time)
     ans = {}

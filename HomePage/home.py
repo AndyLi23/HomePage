@@ -2,7 +2,6 @@ from flask import Blueprint, render_template
 from HomePage.backend.jokes.get_filter_jokes import get_jokes
 from HomePage.backend.news.news import get_all_news
 from HomePage.backend.stocks.stocks import get_all_stock
-from HomePage.backend.today.today import get_today
 from random import randint, shuffle
 from os import fork
 
@@ -14,7 +13,8 @@ websites = {
     "CNN": ["https://www.cnn.com/specials/last-50-stories", ["cd__headline-text"]],
     "Washington Post": ["https://www.washingtonpost.com/", []],
     "Wall Street Journal": ["https://www.wsj.com/", []],
-    "The Atlantic": ["https://www.theatlantic.com/most-popular/", ["hed"]]
+    "The Atlantic": ["https://www.theatlantic.com/most-popular/", ["hed"]],
+    "Today": []
 }
 
 
@@ -22,6 +22,8 @@ def getWebsites():
     news = get_all_news(websites, 15)
     music = news["Billboard"]
     del news["Billboard"]
+    today = news["Today"]
+    del news["Today"]
     all_news = []
     for i in websites.keys():
         if i in news.keys():
@@ -38,7 +40,7 @@ def getWebsites():
                         pass
             all_news.extend(list(temp))
     shuffle(all_news)
-    return (all_news, music)
+    return (all_news, music, today)
 
 
 def getStock():
@@ -59,13 +61,14 @@ def index():
     global st
     global all_news
     global music
+    global today
     if x:
         st = getStock()
     else:
-        all_news, music = getWebsites()
+        all_news, music, today = getWebsites()
     jokes = getJokes()
     try:
-        return render_template('index.html', news=all_news, jokes=jokes, today=get_today(), stocks=st, music=music)
+        return render_template('index.html', news=all_news, jokes=jokes, today=today, stocks=st, music=music)
     except:
-        all_news, music = getWebsites()
-        return render_template('index.html', news=all_news, jokes=jokes, today=get_today(), stocks=getStock(), music=music)
+        all_news, music, today = getWebsites()
+        return render_template('index.html', news=all_news, jokes=getJokes(), today=today, stocks=getStock(), music=music)
